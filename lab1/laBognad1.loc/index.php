@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<?php
+include 'php/connect.php';
+require_once 'php/select_name.php';
+//require_once 'php/select_league.php';
+?>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+        <link rel="stylesheet" type="text/css" href="table.css" >
+        <script src="js/main.js"></script>
+    </head>
+    <body>
+         <!--form0-->
+         <h2>Выберите лигу </h2>
+         <form  method="POST" action="php/league.php">
+            <select name="league">
+
+            <?php foreach($_SESSION['league'] as $row) { ?>
+                <option value="<?=$row[0]?>"><?=$row[0]?></option>
+            <?php }  ?>
+            </select>
+            <input type="submit" value="OK">
+        </form>
+        
+        <!--form1-->
+        <h2>Выберите дату</h2>
+        <form id="date" action="php/select_game_date.php" method="POST">
+            <!--<input type="text" name="test" >-->
+            <input type="date" name="date" min="2020-03-28" value="<?php echo date("Y-m-d")?>">
+            <input type="submit" value="OK">
+            <input type="checkbox" onchange="show_data()" >show betwwen
+            <div id="between"></div>
+        </form>
+        <!--form2-->
+         <h2>Выберите имя</h2>
+         <form  method="POST" action="php/select_game_name.php">
+            <select name="name">
+            <?php foreach($_SESSION['name'] as $row):?>
+                <option value="<?=$row?>"><?=$row?></option>
+            <?php endforeach; ?>
+            </select>
+            <input type="submit" value="OK">
+        </form>
+         <?php  if(isset($_SESSION['data'])):?>
+         <table border="1" class="table_blur">
+        <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Место</th>
+                <th>Игрок</th>
+                <th>Команда 1</th>
+                <th>Счет</th>
+                <th>Команда 2</th>
+            </tr>
+        </thead>
+        <tbody id="res" >           
+       <?php for($i=0;$i<count($_SESSION['data']['score']);$i++):?>
+            <tr><td><?=$_SESSION['data']['date'][$i]?></td><td><?=$_SESSION['data']['place'][$i]?></td><td><?=$_SESSION['data']['name_player'][$i]?></td><td><?=$_SESSION['data']['team_name'][$i]?></td><td><?=$_SESSION['data']['score'][$i]?></td><td><?=$_SESSION['data']['opponent'][$i]?></td></tr>
+            <?php
+            endfor;
+        endif;
+            unset($_SESSION['data']);
+        ?>
+        </tbody>
+        </table>
+         
+         
+         <!--table 2-->
+         <?php if(isset($_SESSION['data_league'])): ?>
+         <table border="1" class="table_blur">
+        <thead>
+            <tr>
+                <th>Тренер</th>
+                <th>Команда</th>
+                <th>Лига</th>
+            </tr>
+        </thead>
+        <tbody id="result" > 
+        <?php for($i=0;$i<count($_SESSION['data_league']['coach']);$i++):?>
+            <tr><td><?=$_SESSION['data_league']['coach'][$i]?></td><td><?=$_SESSION['data_league']['team_name'][$i]?></td><td><?=$_SESSION['data_league']['league'][$i]?></td></tr>
+            <?php
+            endfor;
+            endif;
+            unset($_SESSION['data_league']);
+        ?>
+            
+        </tbody>
+        </table>
+    </body>
+</html>
